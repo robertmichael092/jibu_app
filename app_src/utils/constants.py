@@ -1,0 +1,8 @@
+# Global constants for the JIBU app
+
+PRIMARY_COLOR = "#1A73E8"   # JIBU blue
+BACKGROUND_COLOR = "#F5F5F5"
+TEXT_COLOR = "#333333"
+
+APP_NAME = "JIBU"
+VERSION = "1.0.0"
