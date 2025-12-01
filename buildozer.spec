@@ -3,6 +3,7 @@
 title = Jibu
 package.name = jibu
 package.domain = org.jibu
+version = 0.1
 
 source.dir = .
 source.include_exts = py,kv,png,jpg,ttf,wav,mp3,json,bin,txt
