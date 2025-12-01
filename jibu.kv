@@ -1,0 +1,258 @@
+#:kivy 2.1.0
+
+JibuScreenManager:
+    LoginScreen:
+    RegisterScreen:
+    EmailVerifyScreen:
+    ForgotPasswordScreen:
+    ResetPasswordScreen:
+    HomeScreen:
+    ChatScreen:
+    ProfileScreen:
+    SettingsScreen:
+    HistoryScreen:
+    LanguageScreen:
+
+
+<LoginScreen>:
+    name: "login"
+    BoxLayout:
+        orientation: "vertical"
+        spacing: dp(20)
+        padding: dp(30)
+
+        Label:
+            text: "JIBU"
+            font_size: "40sp"
+        
+        TextInput:
+            id: email
+            hint_text: "Email"
+            size_hint_y: None
+            height: dp(50)
+
+        TextInput:
+            id: password
+            hint_text: "Password"
+            password: True
+            size_hint_y: None
+            height: dp(50)
+
+        Button:
+            text: "Login"
+            size_hint_y: None
+            height: dp(50)
+            on_release:
+                app.root.current = "home"
+
+        Button:
+            text: "Register"
+            size_hint_y: None
+            height: dp(50)
+            on_release:
+                app.root.current = "register"
+
+
+<RegisterScreen>:
+    name: "register"
+    BoxLayout:
+        orientation: "vertical"
+        spacing: dp(20)
+        padding: dp(30)
+
+        Label:
+            text: "Create Account"
+            font_size: "30sp"
+
+        TextInput:
+            hint_text: "Full Name"
+            size_hint_y: None
+            height: dp(50)
+
+        TextInput:
+            hint_text: "Email"
+            size_hint_y: None
+            height: dp(50)
+
+        TextInput:
+            hint_text: "Password"
+            password: True
+            size_hint_y: None
+            height: dp(50)
+
+        Button:
+            text: "Register"
+            size_hint_y: None
+            height: dp(50)
+            on_release:
+                app.root.current = "email_verify"
+
+        Button:
+            text: "Back to Login"
+            size_hint_y: None
+            height: dp(50)
+            on_release:
+                app.root.current = "login"
+
+
+<EmailVerifyScreen>:
+    name: "email_verify"
+    BoxLayout:
+        orientation: "vertical"
+        spacing: dp(20)
+        padding: dp(30)
+
+        Label:
+            text: "Check Your Email"
+            font_size: "26sp"
+            halign: "center"
+        
+        Label:
+            text: "We sent a verification link to your email."
+
+        Button:
+            text: "Continue"
+            size_hint_y: None
+            height: dp(50)
+            on_release:
+                app.root.current = "home"
+
+
+<ForgotPasswordScreen>:
+    name: "forgot"
+    BoxLayout:
+        orientation: "vertical"
+        spacing: dp(20)
+        padding: dp(30)
+
+        Label:
+            text: "Forgot Password?"
+
+        TextInput:
+            hint_text: "Enter your email"
+            size_hint_y: None
+            height: dp(50)
+
+        Button:
+            text: "Send Reset Link"
+            size_hint_y: None
+            height: dp(50)
+            on_release:
+                app.root.current = "reset_password"
+
+
+<ResetPasswordScreen>:
+    name: "reset_password"
+    BoxLayout:
+        orientation: "vertical"
+        spacing: dp(20)
+        padding: dp(30)
+
+        Label:
+            text: "Reset Your Password"
+
+        TextInput:
+            hint_text: "New Password"
+            password: True
+            size_hint_y: None
+            height: dp(50)
+
+        TextInput:
+            hint_text: "Confirm New Password"
+            password: True
+            size_hint_y: None
+            height: dp(50)
+
+        Button:
+            text: "Save Password"
+            size_hint_y: None
+            height: dp(50)
+            on_release:
+                app.root.current = "login"
+
+
+<HomeScreen>:
+    name: "home"
+    BoxLayout:
+        orientation: "vertical"
+
+        Label:
+            text: "Welcome to JIBU"
+            font_size: "30sp"
+
+        Button:
+            text: "Start Chat"
+            on_release:
+                app.root.current = "chat"
+
+        Button:
+            text: "Settings"
+            on_release:
+                app.root.current = "settings"
+
+        Button:
+            text: "Profile"
+            on_release:
+                app.root.current = "profile"
+
+
+<ChatScreen>:
+    name: "chat"
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(10)
+
+        Label:
+            text: "Chat Screen (Placeholder)"
+            font_size: "24sp"
+
+        TextInput:
+            hint_text: "Type your message..."
+            size_hint_y: None
+            height: dp(60)
+
+        Button:
+            text: "Send"
+            size_hint_y: None
+            height: dp(50)
+
+
+<ProfileScreen>:
+    name: "profile"
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(10)
+        Label:
+            text: "Profile Screen"
+
+
+<SettingsScreen>:
+    name: "settings"
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(10)
+        Label:
+            text: "Settings Screen"
+
+
+<HistoryScreen>:
+    name: "history"
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(10)
+        Label:
+            text: "Chat History"
+
+
+<LanguageScreen>:
+    name: "language"
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(10)
+        Label:
+            text: "Select Language"
