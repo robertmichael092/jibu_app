@@ -1,4 +1,4 @@
-from kivy.app import App
+from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 
@@ -41,7 +41,7 @@ class JibuScreenManager(ScreenManager):
     pass
 
 
-class JibuApp(App):
+class JibuApp(MDApp):
     def build(self):
         return Builder.load_file("jibu.kv")
 
