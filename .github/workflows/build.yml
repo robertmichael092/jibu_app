@@ -14,10 +14,9 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt update
-          sudo apt install -y python3-pip python3-setuptools python3-wheel unzip openjdk-17-jdk build-essential git
+          sudo apt install -y python3-pip python3-setuptools python3-wheel unzip git openjdk-17-jdk build-essential
           pip install --upgrade Cython==0.29.33
           pip install buildozer
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Install Android SDK Build Tools 33.0.2
         run: |
@@ -26,18 +25,17 @@ jobs:
 
           wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O tools.zip
           unzip tools.zip -d cmdline-tools-temp
-
           mkdir -p cmdline-tools
           mv cmdline-tools-temp/cmdline-tools cmdline-tools/latest
           rm -rf cmdline-tools-temp
 
-          yes | cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk "platforms;android-31" "platform-tools" "build-tools;33.0.2"
+          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "build-tools;33.0.2"
+
+          echo "ANDROIDSDK=$HOME/android-sdk" >> $GITHUB_ENV
+          echo "ANDROIDHOME=$HOME/android-sdk" >> $GITHUB_ENV
+          echo "PATH=$HOME/android-sdk/platform-tools:$HOME/android-sdk/build-tools/33.0.2:$PATH" >> $GITHUB_ENV
 
       - name: Build APK
-        env:
-          ANDROIDSDK: ${{ runner.home }}/android-sdk
-          ANDROIDHOME: ${{ runner.home }}/android-sdk
-          PATH: ${{ runner.home }}/android-sdk/platform-tools:${{ runner.home }}/android-sdk/build-tools/33.0.2:${{ env.PATH }}
         run: |
           export ANDROIDSDK=$ANDROIDSDK
           export ANDROIDHOME=$ANDROIDSDK
