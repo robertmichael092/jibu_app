@@ -1,7 +1,10 @@
-name: Build JIBU APK
+name: Build JIBU Debug APK
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
@@ -9,41 +12,24 @@ jobs:
 
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Install Dependencies
         run: |
           sudo apt update
-          sudo apt install -y python3-pip python3-setuptools python3-wheel unzip git openjdk-17-jdk build-essential
-          pip install --upgrade Cython==0.29.33
-          pip install buildozer
+          sudo apt install -y git zip unzip python3 python3-pip
 
-      - name: Install Android SDK Build Tools 33.0.2
+      - name: Install Buildozer
         run: |
-          mkdir -p $HOME/android-sdk
-          cd $HOME/android-sdk
+          pip3 install --upgrade pip
+          pip3 install buildozer
 
-          wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O tools.zip
-          unzip tools.zip -d cmdline-tools-temp
-          mkdir -p cmdline-tools
-          mv cmdline-tools-temp/cmdline-tools cmdline-tools/latest
-          rm -rf cmdline-tools-temp
-
-          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "build-tools;33.0.2"
-
-          echo "ANDROIDSDK=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "ANDROIDHOME=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "PATH=$HOME/android-sdk/platform-tools:$HOME/android-sdk/build-tools/33.0.2:$PATH" >> $GITHUB_ENV
-
-      - name: Build APK
+      - name: Build Debug APK
         run: |
-          export ANDROIDSDK=$ANDROIDSDK
-          export ANDROIDHOME=$ANDROIDSDK
-          export PATH=$ANDROIDSDK/platform-tools:$ANDROIDSDK/build-tools/33.0.2:$PATH
           buildozer android debug
 
       - name: Upload APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
-          name: JIBU-APK
-          path: bin/*
+          name: jibu-debug-apk
+          path: bin/*.apk
