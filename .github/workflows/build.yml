@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Dependencies
         run: |
@@ -17,6 +17,19 @@ jobs:
           sudo apt install -y python3-pip python3-setuptools python3-wheel unzip openjdk-17-jdk build-essential git
           pip install --upgrade Cython==0.29.33
           pip install buildozer
+
+      - name: Install Android SDK Build Tools 33.0.2
+        run: |
+          mkdir -p $HOME/android-sdk
+          cd $HOME/android-sdk
+          wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O tools.zip
+          unzip tools.zip -d cmdline-tools
+          mv cmdline-tools cmdline-tools/latest
+          yes | cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "platforms;android-31" "build-tools;33.0.2"
+
+          echo "ANDROIDSDK=$HOME/android-sdk" >> $GITHUB_ENV
+          echo "ANDROIDNDK=$HOME/.buildozer/android/platform/android-ndk-r25b" >> $GITHUB_ENV
+          echo "PATH=$HOME/android-sdk/build-tools/33.0.2:$PATH" >> $GITHUB_ENV
 
       - name: Build APK
         run: |
