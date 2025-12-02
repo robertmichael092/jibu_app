@@ -4,8 +4,14 @@ title = Jibu
 package.name = jibu
 package.domain = org.jibu
 version = 0.1
+
+# FORCE Buildozer to use OUR SDK (installed in workflow)
 android.sdk_dir = /home/runner/android-sdk
+
+# Use Buildozer’s default NDK location (it installs NDK correctly)
 android.ndk_dir = /home/runner/.buildozer/android/platform/android-ndk-r25b
+
+# Auto-accept Google SDK licenses
 android.accept_sdk_license = True
 
 source.dir = .
@@ -25,5 +31,3 @@ requirements = python3,kivy,kivymd,requests
 
 presplash.filename = ./app_src/assets/images/presplash.png
 icon.filename = ./app_src/assets/icons/icon.png
-
-# (We will add permissions later)
