@@ -8,21 +8,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout repo
+      uses: actions/checkout@v4
 
-      - name: Install Docker
-        run: |
-          sudo apt update
-          sudo apt install -y docker.io
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v3
 
-      - name: Build APK using Buildozer Docker
-        run: |
-          docker run --rm -v ${{ github.workspace }}:/home/buildozer/app \
-            kivy/buildozer android debug
+    - name: Pull Buildozer Docker image
+      run: docker pull kivy/buildozer
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: jibu-debug-apk
-          path: bin/*.apk
+    - name: Build APK using Buildozer Docker
+      run: |
+        docker run --rm \
+          -v ${{ github.workspace }}:/home/buildozer/app \
+          kivy/buildozer \
+          buildozer -v android debug
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: jibu-debug-apk
+        path: bin/*.apk
