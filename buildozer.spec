@@ -1,30 +1,34 @@
 [app]
 
-title = jibu
+# (name displayed on device)
+title = Jibu
 package.name = jibu
 package.domain = org.jibu
+source.dir = app_src
+source.include_exts = py,kv,png,jpg,ttf,json,txt
+# App version (required)
+version = 0.1
 
-source.dir = .
-version = 1.0.0
-source.include_exts = py,kv,png,jpg,ttf,json,bin
+# Python / Kivy requirements
+requirements = python3,kivy,kivymd,requests
 
-presplash.filename = ./app_src/assets/images/presplash.png
-icon.filename = ./app_src/assets/icons/icon.png
-
+# Orientation and other app settings
 orientation = portrait
 fullscreen = 0
 
-requirements = python3==3.10.12, kivy==2.3.0, kivymd==1.1.1, urllib3, certifi, chardet, idna
+# Android settings
+# Set the icon path relative to the project directory
+# (must match the files you upload: see instructions below)
+icon.filename = app_src/assets/icons/icon.png
+presplash.filename = app_src/presplash.png
 
-android.api = 33
-android.minapi = 21
-android.sdk = 33
-android.ndk = 25b
-android.ndk_api = 21
-android.archs = arm64-v8a
-
-android.accept_sdk_license = True
-
-bootstrap = sdl2
-
+# Any other android options (example)
+android.arch = arm64-v8a
 android.permissions = INTERNET
+
+[buildozer]
+# Make CI non-interactive when running as root (DO NOT PROMPT)
+# This prevents Buildozer asking "Are you sure you want to continue [y/n]?"
+warn_on_root = 0
+
+log_level = 2
