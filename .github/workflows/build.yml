@@ -8,25 +8,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+    - name: Checkout repo
+      uses: actions/checkout@v4
 
-      - name: Pull Buildozer Docker image
-        run: docker pull kivy/buildozer:latest
+    - name: Pull Buildozer Docker image
+      run: docker pull kivy/buildozer:latest
 
-      - name: Run CI build script inside Buildozer container
-        run: |
-          docker run --rm -i \
-            -u root \
-            -e BUILDOZER_ALLOW_ROOT=1 \
-            -e BUILDOZER_FORCE_ACCEPT=1 \
-            -v "${{ github.workspace }}":/app \
-            -w /app \
-            kivy/buildozer:latest \
-            /bin/bash -lc "chmod +x ./ci_build.sh && ./ci_build.sh"
+    - name: Build APK using Buildozer Docker
+      # mount repo into container at /home/user/app and run buildozer non-interactively
+      run: |
+        docker run --rm \
+          -v "${{ github.workspace }}":/home/user/app \
+          -w /home/user/app \
+          kivy/buildozer:latest \
+          /bin/bash -lc "cd /home/user/app && buildozer -v android debug --quiet --no-ansi --storage-dir=/tmp/.buildozer"
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: JIBU-APK
-          path: bin/*.apk
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: JIBU-APK
+        path: bin/*.apk
