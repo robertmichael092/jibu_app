@@ -5,6 +5,7 @@ package.name = jibu
 package.domain = org.jibu
 
 source.dir = .
+version = 1.0.0
 source.include_exts = py,kv,png,jpg,ttf,json,bin
 
 presplash.filename = ./app_src/assets/images/presplash.png
