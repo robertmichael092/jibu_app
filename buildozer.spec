@@ -27,7 +27,7 @@ android.ndk = 25b
 android.ndk_api = 21
 android.archs = arm64-v8a, armeabi-v7a
 
-requirements = python3==3.11,kivy,kivymd,urllib3,certifi,chardet,idna
+requirements = python3==3.10,kivy,kivymd,urllib3,certifi,chardet,idna
 
 presplash.filename = ./app_src/assets/images/presplash.png
 icon.filename = ./app_src/assets/icons/icon.png
