@@ -23,31 +23,34 @@ jobs:
           mkdir -p $HOME/android-sdk
           cd $HOME/android-sdk
 
+          # Download command line tools
           wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O tools.zip
-
           mkdir cmdline-tools
           unzip tools.zip -d cmdline-tools-temp
-
           mv cmdline-tools-temp/cmdline-tools cmdline-tools/latest
-          rm -rf cmdline-tools-temp
+          rm -rf cmdline-tools-temp tools.zip
 
-          yes | cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "platforms;android-31" "build-tools;33.0.2"
-
-          echo "ANDROIDSDK=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "ANDROIDHOME=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "PATH=$HOME/android-sdk/build-tools/33.0.2:$PATH" >> $GITHUB_ENV
+          # Install SDK components
+          yes | cmdline-tools/latest/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "platforms;android-33" "build-tools;33.0.2" "ndk;25.2.9519653"
 
       - name: Build APK
         env:
-          ANDROIDSDK: ${{ env.ANDROIDSDK }}
-          ANDROIDHOME: ${{ env.ANDROIDHOME }}
+          ANDROIDSDK: $HOME/android-sdk
+          ANDROIDNDK: $HOME/android-sdk/ndk/25.2.9519653
+          ANDROIDHOME: $HOME/android-sdk
+          PATH: $HOME/android-sdk/cmdline-tools/latest/bin:$HOME/android-sdk/build-tools/33.0.2:$PATH
         run: |
           export ANDROIDSDK=$ANDROIDSDK
+          export ANDROIDNDK=$ANDROIDNDK
           export ANDROIDHOME=$ANDROIDHOME
+
+          echo "Installed build-tools:"
+          ls $HOME/android-sdk/build-tools
+
           buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: JIBU-APK
-          path: bin/*
+          path: bin/*.apk
