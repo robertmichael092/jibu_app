@@ -6,7 +6,7 @@ package.domain = org.jibu
 version = 0.1
 
 # FORCE Buildozer to use OUR SDK (installed in workflow)
-android.sdk_dir = /home/runner/work/jibu_app/jibu_app/android-sdk
+android.sdk_dir = /home/runner/android-sdk
 
 # Use Buildozer’s default NDK location (it installs NDK correctly)
 android.ndk_dir = /home/runner/.buildozer/android/platform/android-ndk-r25b
