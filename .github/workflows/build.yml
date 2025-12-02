@@ -11,17 +11,14 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
 
-    - name: Pull Buildozer Docker image
-      run: docker pull kivy/buildozer:latest
-
-    - name: Build APK using Buildozer Docker
-      # mount repo into container at /home/user/app and run buildozer non-interactively
+    - name: Build APK
       run: |
         docker run --rm \
-          -v "${{ github.workspace }}":/home/user/app \
-          -w /home/user/app \
+          --entrypoint /bin/bash \
+          -v "${{ github.workspace }}":/app \
+          -w /app \
           kivy/buildozer:latest \
-          /bin/bash -lc "cd /home/user/app && buildozer -v android debug --quiet --no-ansi --storage-dir=/tmp/.buildozer"
+          -c "buildozer -v android debug"
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
