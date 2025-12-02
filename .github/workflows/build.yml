@@ -15,12 +15,15 @@ jobs:
       run: docker pull kivy/buildozer
 
     - name: Build APK
+      env:
+        BUILDOZER_FORCE_ACCEPT: "1"
       run: |
         docker run --rm \
           -v ${{ github.workspace }}:/home/user/app \
+          -e BUILDOZER_FORCE_ACCEPT=1 \
           -w /home/user/app \
           kivy/buildozer \
-          buildozer -v android debug --allow-host-python-versions --accept
+          bash -c "buildozer android debug"
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
