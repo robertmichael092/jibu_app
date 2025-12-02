@@ -25,7 +25,7 @@ android.minapi = 21
 android.sdk = 31
 android.ndk = 25b
 android.ndk_api = 21
-android.archs = arm64-v8a, armeabi-v7a
+android.archs = arm64-v8a
 
 requirements = python3==3.10.12,kivy==2.3.0,kivymd==1.1.1,urllib3,certifi,chardet,idna
 
