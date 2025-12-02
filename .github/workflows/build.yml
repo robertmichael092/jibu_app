@@ -11,9 +11,6 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
 
-    - name: Enable longpaths
-      run: git config --system core.longpaths true
-
     - name: Pull Buildozer Docker image
       run: docker pull kivy/buildozer
 
