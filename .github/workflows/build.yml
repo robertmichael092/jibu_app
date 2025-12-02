@@ -23,7 +23,7 @@ jobs:
           -e BUILDOZER_FORCE_ACCEPT=1 \
           -w /home/user/app \
           kivy/buildozer \
-          bash -c "buildozer android debug"
+          bash -c "buildozer -v android debug"
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
