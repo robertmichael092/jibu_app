@@ -1,4 +1,5 @@
-#:kivy 2.1.0
+#:import dp kivy.metrics.dp
+# kivy 2.1.0
 
 JibuScreenManager:
     LoginScreen:
@@ -13,7 +14,6 @@ JibuScreenManager:
     HistoryScreen:
     LanguageScreen:
 
-
 <LoginScreen>:
     name: "login"
     BoxLayout:
@@ -24,7 +24,7 @@ JibuScreenManager:
         Label:
             text: "JIBU"
             font_size: "40sp"
-        
+
         TextInput:
             id: email
             hint_text: "Email"
@@ -106,7 +106,7 @@ JibuScreenManager:
             text: "Check Your Email"
             font_size: "26sp"
             halign: "center"
-        
+
         Label:
             text: "We sent a verification link to your email."
 
@@ -224,6 +224,7 @@ JibuScreenManager:
         orientation: "vertical"
         padding: dp(20)
         spacing: dp(10)
+
         Label:
             text: "Profile Screen"
 
@@ -234,6 +235,7 @@ JibuScreenManager:
         orientation: "vertical"
         padding: dp(20)
         spacing: dp(10)
+
         Label:
             text: "Settings Screen"
 
@@ -244,6 +246,7 @@ JibuScreenManager:
         orientation: "vertical"
         padding: dp(20)
         spacing: dp(10)
+
         Label:
             text: "Chat History"
 
@@ -254,5 +257,6 @@ JibuScreenManager:
         orientation: "vertical"
         padding: dp(20)
         spacing: dp(10)
+
         Label:
             text: "Select Language"
