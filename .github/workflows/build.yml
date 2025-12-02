@@ -1,4 +1,4 @@
-name: Build JIBU APK (Docker Buildozer)
+name: Build JIBU APK (Android Buildozer CI)
 
 on:
   workflow_dispatch:
@@ -11,16 +11,13 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
 
-    - name: Build APK using Buildozer Docker (FULL ANDROID SDK)
+    - name: Build APK using full Android Buildozer image
       run: |
         docker run --rm \
           -v "${{ github.workspace }}":/app \
           -w /app \
-          kivy/buildozer:android \
-          bash -c "
-            echo 'Using full Android SDK buildozer image';
-            buildozer -v android debug
-          "
+          opslabhq/buildozer-android \
+          buildozer -v android debug
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
