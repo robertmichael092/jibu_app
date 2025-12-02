@@ -11,17 +11,12 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
 
-    - name: Pull Buildozer Docker image
-      run: docker pull kivy/buildozer
-
-    - name: Build APK
+    - name: Build APK using Buildozer Docker
       run: |
         docker run --rm \
-          -v "${{ github.workspace }}":/home/user/app \
-          -e BUILDOZER_FORCE_ACCEPT=1 \
-          -w /home/user/app \
-          kivy/buildozer \
-          /bin/bash -lc "buildozer -v --accept android debug"
+        -v ${{ github.workspace }}:/app \
+        kivy/buildozer \
+        /bin/bash -lc "cd /app && buildozer -v --accept android debug"
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
