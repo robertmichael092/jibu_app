@@ -4,6 +4,9 @@ title = Jibu
 package.name = jibu
 package.domain = org.jibu
 version = 0.1
+android.sdk_dir = /home/runner/android-sdk
+android.ndk_dir = /home/runner/.buildozer/android/platform/android-ndk-r25b
+android.accept_sdk_license = True
 
 source.dir = .
 source.include_exts = py,kv,png,jpg,ttf,wav,mp3,json,bin,txt
