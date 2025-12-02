@@ -11,18 +11,14 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
 
-    - name: Build APK
+    - name: Build APK using Buildozer Docker (FULL ANDROID SDK)
       run: |
         docker run --rm \
-          --entrypoint /bin/bash \
           -v "${{ github.workspace }}":/app \
           -w /app \
-          kivy/buildozer:latest \
-          -c "
-            echo 'Installing Android build-tools and platforms...' &&
-            yes | sdkmanager --licenses &&
-            sdkmanager 'build-tools;33.0.2' 'platforms;android-33' 'platform-tools' &&
-            echo 'Starting Buildozer build...' &&
+          kivy/buildozer:android \
+          bash -c "
+            echo 'Using full Android SDK buildozer image';
             buildozer -v android debug
           "
 
