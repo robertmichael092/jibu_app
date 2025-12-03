@@ -1,4 +1,4 @@
-name: Build JIBU APK (Buildozer)
+name: Build JIBU APK (Ultimate Stable Buildozer CI)
 
 on:
   workflow_dispatch:
@@ -11,43 +11,73 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.10"
-
+    # -------- SYSTEM AND PYTHON DEPENDENCIES --------
     - name: Install system dependencies
       run: |
         sudo apt update
-        sudo apt install -y zip unzip openjdk-17-jdk python3-pip git
+        sudo apt install -y zip unzip openjdk-17-jdk python3-pip git curl python3-setuptools python3-wheel libstdc++6
 
-    - name: Install Buildozer
+    - name: Upgrade pip and install Buildozer
       run: |
-        pip install --upgrade pip setuptools wheel Cython buildozer
+        pip install --upgrade pip setuptools wheel Cython virtualenv
+        pip install buildozer==1.5.0
 
-    - name: Accept Android SDK licenses
+    # -------- ANDROID SDK + COMMAND LINE TOOLS --------
+    - name: Download Android cmdline-tools
       run: |
-        yes | sdkmanager --licenses || true
+        mkdir -p $HOME/android-sdk/cmdline-tools
+        cd $HOME/android-sdk/cmdline-tools
+        curl -o tools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+        unzip tools.zip
+        rm tools.zip
+        mv cmdline-tools latest
 
     - name: Install Android SDK components
       run: |
-        export ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
-        export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
+        export ANDROID_HOME=$HOME/android-sdk
+        export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
 
-        mkdir -p $ANDROID_HOME
+        # Accept all Android licenses silently
+        yes | sdkmanager --licenses
 
-        sdkmanager "platform-tools" \
-                   "platforms;android-33" \
-                   "build-tools;33.0.2" \
-                   "cmdline-tools;latest"
+        # Stable components (prevents build-tools or platform errors)
+        sdkmanager "platform-tools"
+        sdkmanager "platforms;android-33"
+        sdkmanager "build-tools;33.0.2"
 
+        # Install NDK (fixes missing toolchain/clang errors)
+        sdkmanager "ndk;25.2.9519653"
+
+        # Install older platform for compatibility
+        sdkmanager "platforms;android-31"
+
+        # Ensure extras (Google USB & m2 repositories)
+        sdkmanager "extras;google;m2repository"
+        sdkmanager "extras;android;m2repository"
+
+    # -------- PRE-FIX BUILD ISSUES --------
+    - name: Patch Buildozer environment
+      run: |
+        export ANDROID_HOME=$HOME/android-sdk
+        export PATH=$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/33.0.2:$PATH
+
+        # Create dirs Buildozer sometimes expects
+        mkdir -p $HOME/.buildozer/android/platform/android-sdk/build-tools
+        mkdir -p $HOME/.buildozer/android/platform/android-sdk/platforms
+
+        # Prevent "warn_on_root" or interactive prompts
+        echo "export BUILDOZER_WARN_ON_ROOT=0" >> $GITHUB_ENV
+        echo "export BUILDOZER_ACCEPT_SDK_LICENSE=1" >> $GITHUB_ENV
+
+    # -------- RUN THE BUILD --------
     - name: Build APK
       run: |
-        export ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
-        export PATH=$ANDROID_HOME/build-tools/33.0.2:$ANDROID_HOME/platform-tools:$PATH
+        export ANDROID_HOME=$HOME/android-sdk
+        export PATH=$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/33.0.2:$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
 
         buildozer -v android debug --accept
 
+    # -------- UPLOAD RESULT --------
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
