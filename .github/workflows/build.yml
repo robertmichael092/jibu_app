@@ -6,38 +6,29 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    - name: Checkout repo
+      uses: actions/checkout@v4
 
-      - name: Ensure git safe dir (avoid permissions warnings)
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE" || true
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
 
-      - name: Setup Python (for pip/buildozer)
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
+    - name: Install system deps
+      run: |
+        sudo apt update
+        sudo apt install -y zip unzip openjdk-17-jdk
 
-      - name: Install system packages (wget, unzip, openjdk, zip, unzip)
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y --no-install-recommends wget unzip openjdk-17-jdk-headless default-jdk zip \
-            make build-essential git python3-venv python3-dev gcc libc6-dev pkg-config libffi-dev
+    - name: Make CI script executable
+      run: chmod +x ci_build.sh
 
-      - name: Upload ci_build.sh and make executable
-        run: |
-          chmod +x ./ci_build.sh || true
+    - name: Run CI build
+      run: ./ci_build.sh
 
-      - name: Run CI build script
-        env:
-          ANDROID_CMDLINE_TOOLS_URL: "https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip"
-          ANDROID_API: "33"
-          BUILD_TOOLS_VER: "33.0.2"
-          ANDROID_NDK_VER: "25.2.9519653"
-        run: |
-          ./ci_build.sh
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: JIBU-APK
+        path: bin/*.apk
