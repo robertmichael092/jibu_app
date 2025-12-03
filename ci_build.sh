@@ -3,27 +3,20 @@ set -e
 
 echo "==== Starting CI build script"
 
-echo "==== Workdir: $(pwd)"
-
-# Create virtual environment
-echo "==== Creating python venv at .venv_ci_build"
+# Create isolated venv
 python3 -m venv .venv_ci_build
 source .venv_ci_build/bin/activate
 
-echo "==== Upgrading pip & installing pinned build tools"
 pip install --upgrade pip setuptools wheel
 
-# --- FIXED HERE: use valid versions ---
-pip install buildozer==1.5.0
-pip install python-for-android==2024.1.21
+# Install stable buildozer + python-for-android
+pip install "buildozer==1.5.0"
+pip install "python-for-android==2024.1.21"
 
-# Make sure buildozer is visible
-which buildozer
+# Auto-install Android SDK build-tools and accept licenses
+mkdir -p $HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest
+yes | sdkmanager --licenses || true
+sdkmanager "platforms;android-33" "build-tools;33.0.2" "platform-tools"
 
-echo "==== Initialize buildozer if missing"
-if [ ! -f buildozer.spec ]; then
-    buildozer init
-fi
-
-echo "==== Running Buildozer Android Debug"
-buildozer android debug
+# Run buildozer
+buildozer -v android debug
