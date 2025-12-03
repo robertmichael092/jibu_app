@@ -6,108 +6,33 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Checkout Repo
+        uses: actions/checkout@v3
 
-      - name: Use Python 3.10
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
-
-      - name: Install system deps
+      - name: Install System Deps
+        shell: bash
         run: |
           sudo apt-get update
-          sudo apt-get install -y zip unzip openjdk-17-jdk python3-pip git curl wget tar unzip
+          sudo apt-get install -y \
+            python3-pip python3-setuptools python3-wheel \
+            libssl-dev libffi-dev git zip unzip openjdk-17-jdk
 
-      - name: Install Buildozer & Cython (pip in Python 3.10)
+      - name: Install Buildozer
+        shell: bash
         run: |
-          python -m pip install --upgrade pip setuptools wheel
-          python -m pip install Cython==0.29.36 buildozer==1.5.0
+          pip3 install --upgrade pip
+          pip3 install buildozer==1.5.0 Cython==0.29.33
 
-      - name: Prepare Buildozer SDK folders
-        run: |
-          export ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
-          mkdir -p "$ANDROID_HOME"
-          mkdir -p "$HOME/.buildozer/android/platform"
-          mkdir -p $HOME/.buildozer/cache
-          echo "Prepared $ANDROID_HOME"
-
-      - name: Download & install Android cmdline-tools into Buildozer SDK path
-        run: |
-          export ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
-          cd "$ANDROID_HOME" || exit 1
-          curl -L -o commandlinetools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
-          unzip -q commandlinetools.zip -d tmp_cmdline
-          rm -f commandlinetools.zip
-          mkdir -p cmdline-tools
-          mv tmp_cmdline/cmdline-tools cmdline-tools/latest
-          rm -rf tmp_cmdline
-          # create legacy tools/bin shim that Buildozer often checks
-          mkdir -p tools/bin
-          if [ -f cmdline-tools/latest/bin/sdkmanager ]; then
-            ln -sf "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "$ANDROID_HOME/tools/bin/sdkmanager" || true
-            chmod +x "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" || true
-          fi
-          echo "cmdline-tools installed and shim created"
-
-      - name: Install Android SDK components and accept licenses
+      - name: Build APK
+        shell: bash
         env:
-          ANDROID_HOME: ${{ runner.home }}/.buildozer/android/platform/android-sdk
-          PATH: ${{ runner.home }}/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin:${RUNNER_TEMP}:$PATH
+          ANDROIDSDK: ${{ github.workspace }}/.buildozer/android/platform/android-sdk
+          ANDROIDNDK: ${{ github.workspace }}/.buildozer/android/platform/android-ndk
+          ANDROIDAPI: "33"
+          NDKAPI: "21"
         run: |
-          export ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
-          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH
-          echo "Using sdkmanager at: $(command -v sdkmanager || true)"
-          yes | sdkmanager --licenses || true
-          sdkmanager "platform-tools"
-          sdkmanager "platforms;android-33"
-          sdkmanager "build-tools;33.0.2"
-          sdkmanager "ndk;25.2.9519653"
-          sdkmanager "platforms;android-31" || true
-
-      - name: Ensure NDK symlink expected by p4a
-        run: |
-          export ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
-          mkdir -p "$ANDROID_HOME/ndk"
-          # find actual ndk folder
-          NDLDIR=$(ls -1d $ANDROID_HOME/ndk/* 2>/dev/null | head -n1 || true)
-          if [ -n "$NDLDIR" ]; then
-            ln -sfn "$(basename "$NDLDIR")" "$ANDROID_HOME/ndk/25b" || true
-          fi
-          echo "NDK structure:"
-          ls -la $ANDROID_HOME/ndk || true
-
-      - name: Export envs for Buildozer
-        run: |
-          echo "ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk" >> $GITHUB_ENV
-          echo "ANDROID_SDK_ROOT=$HOME/.buildozer/android/platform/android-sdk" >> $GITHUB_ENV
-          echo "PATH=$HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin:$HOME/.buildozer/android/platform/android-sdk/tools/bin:$HOME/.buildozer/android/platform/android-sdk/platform-tools:$HOME/.buildozer/android/platform/android-sdk/build-tools/33.0.2:$PATH" >> $GITHUB_ENV
-          echo "BUILDOZER_WARN_ON_ROOT=0" >> $GITHUB_ENV
-          echo "BUILDOZER_FORCE_ACCEPT=1" >> $GITHUB_ENV
-
-      - name: Show debug info
-        run: |
-          echo "Java:"; java -version || true
-          echo "sdkmanager:"; sdkmanager --version || true
-          echo "aapt/aapt2:"; command -v aapt2 || command -v aapt || true
-          echo "NDK dirs:"; ls -la $HOME/.buildozer/android/platform/android-sdk/ndk || true
-
-      - name: Build APK (final)
-        env:
-          ANDROID_HOME: ${{ env.ANDROID_HOME }}
-          ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
-        run: |
-          export ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
-          export ANDROID_SDK_ROOT=$ANDROID_HOME
-          export PATH=$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/33.0.2:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/tools/bin:$PATH
-          # Run buildozer (non-interactive)
-          buildozer -v android debug --accept
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: JIBU-APK
-          path: bin/*.apk
+          export ANDROID_HOME=$ANDROIDSDK
+          export PATH=$ANDROIDSDK/cmdline-tools/latest/bin:$PATH
+          buildozer android debug
