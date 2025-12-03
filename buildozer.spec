@@ -1,40 +1,27 @@
 [app]
-
-# Basic metadata
 title = Jibu
 package.name = jibu
 package.domain = org.jibu
+source.dir = app_src
+source.include_exts = py,kv,png,jpg,ttf,json,txt
 version = 0.1
-
-# Source directory (repo root)
-source.dir = .
-source.include_exts = py,kv,png,jpg,jpeg,ttf,otf,json,txt
-
-# Application requirements
 requirements = python3,kivy==2.1.0,kivymd,requests
 
-# Orientation / UI
 orientation = portrait
 fullscreen = 0
 
-# Graphics (update these to match your repo paths)
 icon.filename = app_src/assets/icons/icon.png
-presplash.filename = app_src/assets/images/presplash.png
+presplash.filename = app_src/presplash.png
 
-# Android config
-android.archs = arm64-v8a
-android.api = 33
-android.minapi = 21
-android.build_tools_version = 33.0.2
-android.ndk = 25b
-
-# Permissions
+# Android settings
+android.arch = armeabi-v7a
 android.permissions = INTERNET
 
-# Logging
+[buildozer]
+# Make CI non-interactive if running as root (prevents prompt)
+warn_on_root = 0
 log_level = 2
 
-
-[buildozer]
-# Prevent interactive prompt errors in GitHub Actions
-warn_on_root = 0
+# Force known stable targets to avoid SDK manager pulling weird versions
+android.api = 33
+android.build_tools_version = 33.0.2
