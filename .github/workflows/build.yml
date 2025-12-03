@@ -28,7 +28,7 @@ jobs:
       run: ./ci_build.sh
 
     - name: Upload APK artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: JIBU-APK
         path: bin/*.apk
