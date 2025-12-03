@@ -6,55 +6,38 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 120
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Install Dependencies
-      shell: bash
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y python3-pip python3-setuptools python3-wheel \
-            libssl-dev libffi-dev git zip unzip openjdk-17-jdk
+      - name: Ensure git safe dir (avoid permissions warnings)
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE" || true
 
-        pip3 install --upgrade pip
-        pip3 install buildozer==1.5.0 Cython==0.29.33
+      - name: Setup Python (for pip/buildozer)
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
 
-    - name: Prepare Android SDK (force-accept licenses)
-      shell: bash
-      run: |
-        mkdir -p $HOME/android-sdk/cmdline-tools
-        cd $HOME/android-sdk/cmdline-tools
+      - name: Install system packages (wget, unzip, openjdk, zip, unzip)
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends wget unzip openjdk-17-jdk-headless default-jdk zip \
+            make build-essential git python3-venv python3-dev gcc libc6-dev pkg-config libffi-dev
 
-        # Download latest command-line tools
-        wget https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip -O tools.zip
-        unzip tools.zip
-        rm tools.zip
+      - name: Upload ci_build.sh and make executable
+        run: |
+          chmod +x ./ci_build.sh || true
 
-        # Move into "latest" folder (required by sdkmanager)
-        mkdir -p $HOME/android-sdk/cmdline-tools/latest
-        mv cmdline-tools/* $HOME/android-sdk/cmdline-tools/latest/
-
-        export ANDROID_HOME=$HOME/android-sdk
-        export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
-
-        # Accept ALL licenses non-interactively
-        yes | sdkmanager --licenses || true
-
-        # Install Build-Tools + Platform tools
-        yes | sdkmanager "platform-tools" "build-tools;33.0.2" "platforms;android-33" || true
-
-    - name: Build APK
-      shell: bash
-      env:
-        ANDROIDSDK: $HOME/android-sdk
-        ANDROIDNDK: ${{ github.workspace }}/.buildozer/android/platform/android-ndk
-        ANDROIDAPI: "33"
-        NDKAPI: "21"
-      run: |
-        export ANDROID_HOME=$ANDROIDSDK
-        export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
-        export PATH=$ANDROID_HOME/platform-tools:$PATH
-
-        buildozer android debug
+      - name: Run CI build script
+        env:
+          ANDROID_CMDLINE_TOOLS_URL: "https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip"
+          ANDROID_API: "33"
+          BUILD_TOOLS_VER: "33.0.2"
+          ANDROID_NDK_VER: "25.2.9519653"
+        run: |
+          ./ci_build.sh
