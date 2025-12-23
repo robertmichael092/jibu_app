@@ -1,29 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.senti.app">
+package com.senti.app
 
-    <!-- Needed for WebView (safe even if offline) -->
-    <uses-permission android:name="android.permission.INTERNET" />
+import android.os.Bundle
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import androidx.appcompat.app.AppCompatActivity
 
-    <application
-        android:allowBackup="true"
-        android:label="Senti"
-        android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+class MainActivity : AppCompatActivity() {
 
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        val webView = WebView(this)
 
-        </activity>
+        webView.settings.javaScriptEnabled = true
+        webView.settings.domStorageEnabled = true
+        webView.settings.allowFileAccess = true
+        webView.settings.allowContentAccess = true
+        webView.settings.allowFileAccessFromFileURLs = true
+        webView.settings.allowUniversalAccessFromFileURLs = true
 
-    </application>
+        webView.webViewClient = WebViewClient()
+        webView.loadUrl("file:///android_asset/index.html")
 
-</manifest>
+        setContentView(webView)
+    }
+}
