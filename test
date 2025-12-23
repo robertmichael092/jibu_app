@@ -1,5 +1,1 @@
-<style name="Theme.Senti.Splash" parent="Theme.SplashScreen">
-    <item name="windowSplashScreenBackground">@color/splash_bg</item>
-    <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
-    <item name="postSplashScreenTheme">@style/Theme.Senti</item>
-</style>
+android:theme="@style/Theme.Senti.Splash"
