@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Splash theme (Android 12+) -->
-    <style name="Theme.Senti.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#FFFFFF</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
-        <item name="postSplashScreenTheme">@style/Theme.Senti</item>
-    </style>
+    <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Main app theme -->
-    <style name="Theme.Senti" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Your normal app styling goes here -->
-    </style>
+    <application
+        android:allowBackup="true"
+        android:label="Senti"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Senti.Splash">
 
-</resources>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+    </application>
+
+</manifest>
