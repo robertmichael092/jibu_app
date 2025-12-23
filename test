@@ -1,9 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
+<application
+    android:allowBackup="true"
+    android:label="Senti"
+    android:icon="@mipmap/ic_launcher"
+    android:roundIcon="@mipmap/ic_launcher_round"
+    android:supportsRtl="true"
+    android:theme="@style/Theme.Senti">
 
-    <!-- App theme (night) -->
-    <style name="Theme.Senti" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:windowBackground">@color/black</item>
-    </style>
+    <activity
+        android:name=".MainActivity"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
 
-</resources>
+</application>
