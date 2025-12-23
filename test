@@ -1,4 +1,4 @@
-package your.package.name
+package com.senti.app
 
 import android.os.Bundle
 import android.webkit.WebSettings
