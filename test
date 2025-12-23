@@ -1,1 +1,13 @@
-android:theme="@style/Theme.Senti.Splash"
+<style name="Theme.Senti.Splash" parent="Theme.SplashScreen">
+    <!-- Splash background -->
+    <item name="windowSplashScreenBackground">#FFFFFF</item>
+
+    <!-- Splash icon (IMPORTANT) -->
+    <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+
+    <!-- Icon background (must match launcher icon bg) -->
+    <item name="windowSplashScreenIconBackgroundColor">#FFFFFF</item>
+
+    <!-- App theme after splash -->
+    <item name="postSplashScreenTheme">@style/Theme.AppCompat.Light.NoActionBar</item>
+</style>
