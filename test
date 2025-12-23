@@ -1,1 +1,2 @@
-& "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" uninstall com.senti.app
+& "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" shell pm list packages | findstr senti
+& "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" install app\build\outputs\apk\debug\app-debug.apk
