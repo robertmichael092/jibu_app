@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- App theme AFTER splash (dark mode) -->
-    <style name="Theme.Senti" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <!-- App theme -->
+    <style name="Theme.Senti" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Normal app background -->
+        <item name="android:windowBackground">@color/white</item>
     </style>
 
 </resources>
