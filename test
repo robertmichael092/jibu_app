@@ -1,1 +1,1 @@
-"$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" devices
+& "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" devices
