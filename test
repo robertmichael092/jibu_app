@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- App theme AFTER splash -->
-    <style name="Theme.Senti" parent="Theme.AppCompat.Light.NoActionBar">
-    </style>
-
-    <!-- Splash screen theme -->
-    <style name="Theme.Senti.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#FFFFFF</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
-        <item name="postSplashScreenTheme">@style/Theme.Senti</item>
+    <!-- App theme AFTER splash (dark mode) -->
+    <style name="Theme.Senti" parent="Theme.AppCompat.DayNight.NoActionBar">
     </style>
 
 </resources>
