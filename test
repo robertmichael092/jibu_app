@@ -1,20 +1,15 @@
-package com.senti.app
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
 
-import android.os.Bundle
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import androidx.appcompat.app.AppCompatActivity
+    <!-- App theme AFTER splash -->
+    <style name="Theme.Senti" parent="Theme.AppCompat.Light.NoActionBar">
+    </style>
 
-class MainActivity : AppCompatActivity() {
+    <!-- Splash screen theme -->
+    <style name="Theme.Senti.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#FFFFFF</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.Senti</item>
+    </style>
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val webView = WebView(this)
-        webView.settings.javaScriptEnabled = true
-        webView.webViewClient = WebViewClient()
-        webView.loadUrl("file:///android_asset/index.html")
-
-        setContentView(webView)
-    }
-}
+</resources>
