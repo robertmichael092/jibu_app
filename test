@@ -1,2 +1,16 @@
-& "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" shell pm list packages | findstr senti
-& "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" install app\build\outputs\apk\debug\app-debug.apk
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Splash theme (Android 12+) -->
+    <style name="Theme.Senti.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#FFFFFF</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.Senti</item>
+    </style>
+
+    <!-- Main app theme -->
+    <style name="Theme.Senti" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Your normal app styling goes here -->
+    </style>
+
+</resources>
